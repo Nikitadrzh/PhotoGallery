@@ -27,32 +27,31 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     // ThumbnailDownloader, и обрабатывает сообщения при извлечении из очереди
     private ConcurrentMap<T, String> mRequestMap = new ConcurrentHashMap<>();//карта ключ:значение
     private Handler mResponseHandler;//а это уже Handler главного потока!
-//    private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
-//
-//    public interface ThumbnailDownloadListener<T> {//создаем интерфейс слушателя
-//        void onThumbnailDownloaded(T target, Bitmap thumbnail);//метод, реализуюшийся слушаетелем
-//    }
-//
-//    public void setThumbnailDownloadListener(ThumbnailDownloadListener<T> listener) {//сеттер
-//        // листенера
-//        mThumbnailDownloadListener = listener;
-//    }
-//
-//
+    private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
+
+    public interface ThumbnailDownloadListener<T> {//создаем интерфейс слушателя для передачи
+        // загруженных изображений
+        void onThumbnailDownloaded(T target, Bitmap thumbnail);//метод, который нужно будет
+        // реализовать, вызывается, когда загрузка произошла
+    }
+
+    public void setThumbnailDownloadListener(ThumbnailDownloadListener<T> listener) {
+        mThumbnailDownloadListener = listener;
+    }
+
+
     public ThumbnailDownloader(Handler responseHandler) {
         super(TAG); //в родительский класс уходит TAG - название потока
         mResponseHandler = responseHandler; //этой ссылке присваивается ссылка на Handler главного
         // потока
     }
 
-    //
     @Override
     public boolean quit() {//метод завершения потока
         mHasQuit = true;//заметка о выходе
         return super.quit();
     }
 
-    //
     public void queueThumbnail(T target, String url) {//объект типа T - обобщ.параметр, вып. ф-ию
         // идентификатора загрузки, метод вызывается при биндинге, в этот метод передается сообщение
         //это как ящик сообщений????????????????????????????????????????????????????????????????????
