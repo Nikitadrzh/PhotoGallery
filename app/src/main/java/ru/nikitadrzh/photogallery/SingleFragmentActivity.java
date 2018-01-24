@@ -1,6 +1,7 @@
 package ru.nikitadrzh.photogallery;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,8 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { //аб�
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResId());
+
+        StrictMode.enableDefaults();
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_сontainer);
