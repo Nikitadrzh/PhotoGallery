@@ -7,6 +7,11 @@ import android.os.Bundle;
 public class PhotoGalleryActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
+
+        /////////////////////////////////////////////////githubTest delete!
+        int i = 1;
+        /////////////////////////////////////////////////
+
         return PhotoGalleryFragment.newInstance();
     }
     //1-наслед. от SingleFragActiv, создаем контейнер(activ.fragment.xml)//
