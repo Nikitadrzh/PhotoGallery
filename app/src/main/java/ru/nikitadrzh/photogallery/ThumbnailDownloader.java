@@ -30,6 +30,7 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
 
     public interface ThumbnailDownloadListener<T> {//создаем интерфейс слушателя для передачи
+
         // загруженных изображений
         void onThumbnailDownloaded(T target, Bitmap thumbnail);//метод, который нужно будет
         // реализовать, вызывается, когда загрузка произошла
@@ -38,7 +39,6 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     public void setThumbnailDownloadListener(ThumbnailDownloadListener<T> listener) {
         mThumbnailDownloadListener = listener;
     }
-
 
     public ThumbnailDownloader(Handler responseHandler) {
         super(TAG); //в родительский класс уходит TAG - название потока
