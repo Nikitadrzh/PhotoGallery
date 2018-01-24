@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,8 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     private ConcurrentMap<T, String> mRequestMap = new ConcurrentHashMap<>();//карта ключ:значение
     private Handler mResponseHandler;//а это уже Handler главного потока!
     private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
+    private int cacheMaxSize = 5 * 1024 * 1024;//5 MiB
+    private LruCache<String, Bitmap> lruCache = new LruCache<>(cacheMaxSize);//кэш для фотографий
 
     public interface ThumbnailDownloadListener<T> {//создаем интерфейс слушателя для передачи
 
@@ -89,16 +92,25 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     }
 
     private void handleRequest(final T target) {//метод обработки Handler'ом
+        final Bitmap bitmap;
         try {
             final String url = mRequestMap.get(target);//получаем url из карты(ключ:значение)
             if (url == null) {//проверка отсутсвия url
                 return;
             }
-            byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(url);//тут вы получаем набор битов,
-            // но подставляем ДРУГОЙ url - url фотографии
-            final Bitmap bitmap = BitmapFactory//тут получаем саму фотку, из байтов полученных
-                    .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
-            Log.i(TAG, "Bitmap created");
+            //примерно тут нужно проверять кэш на наличие в нем фотографии
+            if (lruCache.get(url) == null) {//если в кэше нет фотографии
+                byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(url);//тут вы получаем набор битов,
+                // но подставляем ДРУГОЙ url - url фотографии
+                bitmap = BitmapFactory//тут получаем саму фотку, из байтов полученных
+                        .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+                Log.i(TAG, "Bitmap created");
+                //тут помещается bitmap в кэш
+                lruCache.put(url, bitmap);
+            } else {//если есть фотография в кэше
+                bitmap = lruCache.get(url);
+                Log.i(TAG, "Bitmap created");
+            }
             mResponseHandler.post(new Runnable() {//отправляем сообщение в handler главного потока
                 // после загрузки, используем анонимный класс
                 @Override
