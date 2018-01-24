@@ -8,8 +8,7 @@ public class PhotoGalleryActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
 
-        String forGithub = "deleteLater";
-        String newforGithub = "deleteLater";
+        String LastforGithub = "deleteLater";
 
         return PhotoGalleryFragment.newInstance();
     }
