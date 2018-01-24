@@ -54,7 +54,7 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
 
     public void queueThumbnail(T target, String url) {//объект типа T - обобщ.параметр, вып. ф-ию
         // идентификатора загрузки, метод вызывается при биндинге, в этот метод передается сообщение
-        //это как ящик сообщений????????????????????????????????????????????????????????????????????
+        //это как ящик сообщений
         Log.i(TAG, "Got a URL: " + url);
         if (url == null) {
             mRequestMap.remove(target);
@@ -94,6 +94,19 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
             final Bitmap bitmap = BitmapFactory//тут получаем саму фотку, из байтов полученных
                     .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
             Log.i(TAG, "Bitmap created");
+            mResponseHandler.post(new Runnable() {//отправляем сообщение в handler главного потока
+                // после загрузки, используем анонимный класс
+                @Override
+                public void run() {
+                    if (mRequestMap.get(target) != url || mHasQuit) {//mHasQuit - флаг завершения
+                        // потока
+                        return;
+                    }
+                    mRequestMap.remove(target);//из карты убитается запись
+                    mThumbnailDownloadListener.onThumbnailDownloaded(target, bitmap);//вызывается
+                    // метод слушателя после загрузки
+                }
+            });
         } catch (IOException e) {
             Log.e(TAG, "Error downloading image", e);
         }
