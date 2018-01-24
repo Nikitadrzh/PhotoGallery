@@ -7,12 +7,6 @@ import android.os.Bundle;
 public class PhotoGalleryActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
-
-        /////////////////////////////////////////////////githubTest delete!
-        int i = 1;
-        i = 2;
-        /////////////////////////////////////////////////        
-
         return PhotoGalleryFragment.newInstance();
     }
     //1-наслед. от SingleFragActiv, создаем контейнер(activ.fragment.xml)//
@@ -63,7 +57,6 @@ public class PhotoGalleryActivity extends SingleFragmentActivity {
     //6 - теперь кидаем сообщения в главный поток//
 
     //остановились на реализации интерфейса//
-
 
 
 }
