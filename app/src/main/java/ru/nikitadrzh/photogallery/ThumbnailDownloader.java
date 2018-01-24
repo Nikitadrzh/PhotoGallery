@@ -46,6 +46,11 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
         // потока
     }
 
+    public void clearQueue() {
+        mRequestHandler.removeMessages(MESSAGE_DOWNLOAD);//очищаются все сообщения с данным "what"
+        mRequestMap.clear();//очищается вся карта
+    }
+
     @Override
     public boolean quit() {//метод завершения потока
         mHasQuit = true;//заметка о выходе

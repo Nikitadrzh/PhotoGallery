@@ -200,4 +200,10 @@ public class PhotoGalleryFragment extends Fragment {
         thumbnailDownloader.quit();//завершение потока
         Log.i(TAG, "Background thread destroyed");
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        thumbnailDownloader.clearQueue();//очищаем сообщения из очереди сообщений
+    }
 }
