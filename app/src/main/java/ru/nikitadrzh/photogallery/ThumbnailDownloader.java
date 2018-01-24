@@ -100,13 +100,12 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
             }
             //примерно тут нужно проверять кэш на наличие в нем фотографии
             if (lruCache.get(url) == null) {//если в кэше нет фотографии
-                byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(url);//тут вы получаем набор битов,
+                byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(url);//тут получаем набор битов,
                 // но подставляем ДРУГОЙ url - url фотографии
                 bitmap = BitmapFactory//тут получаем саму фотку, из байтов полученных
                         .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
                 Log.i(TAG, "Bitmap created");
-                //тут помещается bitmap в кэш
-                lruCache.put(url, bitmap);
+                lruCache.put(url, bitmap);//тут помещается bitmap в кэш
             } else {//если есть фотография в кэше
                 bitmap = lruCache.get(url);
                 Log.i(TAG, "Bitmap created");
