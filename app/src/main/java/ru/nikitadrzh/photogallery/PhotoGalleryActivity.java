@@ -7,8 +7,6 @@ import android.os.Bundle;
 public class PhotoGalleryActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
-        String pullRequestTest = "deleteLater";
-        String pullRequestTest2 = "deleteLater";
         return PhotoGalleryFragment.newInstance();
     }
     //1-наслед. от SingleFragActiv, создаем контейнер(activ.fragment.xml)//
