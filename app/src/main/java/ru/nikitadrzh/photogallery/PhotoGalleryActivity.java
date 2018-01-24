@@ -9,6 +9,7 @@ public class PhotoGalleryActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
 
         String forGithub = "deleteLater";
+        String newforGithub = "deleteLater";
 
         return PhotoGalleryFragment.newInstance();
     }
