@@ -10,7 +10,8 @@ public class PhotoGalleryActivity extends SingleFragmentActivity {
 
         /////////////////////////////////////////////////githubTest delete!
         int i = 1;
-        /////////////////////////////////////////////////
+        i = 2;
+        /////////////////////////////////////////////////        
 
         return PhotoGalleryFragment.newInstance();
     }
