@@ -110,7 +110,12 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     private void handleRequest(List<String> url) {
         Bitmap bitmap;
         for (String urlUnit : url) {//каждый элемент массива url добавляется в кэш
-            if (lruCache.get(urlUnit) == null) {//если в кэше по ссылке нет фотографии
+            if (urlUnit == null) {
+                Log.i(TAG, "url = null");
+                continue;
+            }
+            if (lruCache.get(urlUnit) == null) {//если в кэше по ссылке нет
+                // фотографии
                 try {
                     byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(urlUnit);//тут получаем
                     // набор битов, но подставляем ДРУГОЙ url - url фотографии
