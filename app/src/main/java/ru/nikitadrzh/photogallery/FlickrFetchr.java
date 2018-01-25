@@ -24,6 +24,19 @@ import java.util.List;
 public class FlickrFetchr {//Сетевой класс
     private static final String TAG = "FlickrFetchr";
     private static final String API_KEY = "59dedfc55b29ab8f34ad2ca08ff852bc";
+    private static final String FETCH_RECENT_METHOD = "flickr.photos.getRecent";//константа для
+    // метода получения недавних фото
+    private static final String SEARCH_METHOD = "flickr.photos.search";//константа для метода
+    // выполнения поиска
+    private static final Uri ENDPOINT = Uri
+            .parse("https://api.flickr.com/services/rest/")
+            .buildUpon()
+            .appendQueryParameter("api_key", API_KEY)
+            .appendQueryParameter("format", "json")
+            .appendQueryParameter("nojsoncallback", "1")
+            .appendQueryParameter("extras", "url_s")
+            .appendQueryParameter("page", page)
+            .build();
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {//данные по URL в виде байтов
         URL url = new URL(urlSpec);
@@ -49,29 +62,18 @@ public class FlickrFetchr {//Сетевой класс
         return new String(getUrlBytes(urlSpec));//да, в аргумент стринга передается массив байтов:)
     }
 
-    public List<GalleryItem> fetchItems(String page) {//построение URL запроса и получение результата
+    public List<GalleryItem> fetchItems(String page) {//построение URL запроса и получение
+        // результата
         List<GalleryItem> items = new ArrayList<>();
 
         try {
-            String url = Uri.parse("https://api.flickr.com/services/rest/")
-                    .buildUpon()
-                    .appendQueryParameter("method", "flickr.photos.getRecent")
-                    .appendQueryParameter("api_key", API_KEY)
-                    .appendQueryParameter("format", "json")
-                    .appendQueryParameter("nojsoncallback", "1")
-                    .appendQueryParameter("extras", "url_s")
-                    .appendQueryParameter("page", page)
-                    .build().toString();//изменяем строку с помощью Uri builder
             String jsonString = getUrlString(url);//это итоговая строка в формате JSON
             Log.i(TAG, "Receives JSON: " + jsonString);
 
-            ////////////////////////////////////////////////////////////////////////////////////////
             Gson gson = new Gson();
             Photos galleryItem = gson.fromJson(jsonString, Photos.class);//так просто null
             items = galleryItem.getPhotos().getPhoto();
 
-            Log.i(TAG, "galleryItem");//удалить
-            ////////////////////////////////////////////////////////////////////////////////////////
             //JSONObject jsonBody = new JSONObject(jsonString);//Строится JSONObject
             //parseItems(items, jsonBody);//мотод парсит JSONObject и создает List<GalleryItem>
         } catch (IOException ioe) {
