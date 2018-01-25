@@ -9,8 +9,10 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,6 +24,7 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     // (загрузка миниатюры)
     private static final String TAG = "ThumbnailDownloader";//название потока
     private static final int MESSAGE_DOWNLOAD = 0;
+    private static final int MESSAGE_TO_CACHE = 1;
 
     private boolean mHasQuit = false;
     private Handler mRequestHandler;//ставит в очередь запросов на загрузку в потоке
@@ -51,6 +54,7 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
 
     public void clearQueue() {
         mRequestHandler.removeMessages(MESSAGE_DOWNLOAD);//очищаются все сообщения с данным "what"
+        mRequestHandler.removeMessages(MESSAGE_TO_CACHE);//очищаются все сообщения с данным "what"
         mRequestMap.clear();//очищается вся карта
     }
 
@@ -75,6 +79,16 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
         }
     }
 
+    public void queueCacheThumbnail(List<String> url) {//метод создает сообщение для загрузки в кэш
+        // bitmap по url до того, как начнет работать RecyclerView
+        Log.i(TAG, "Got a URL list");
+        if (url == null) {
+            Log.i(TAG, "Null URL: " + url);//проверить, срабатывает ли?
+        } else {
+            mRequestHandler.obtainMessage(MESSAGE_TO_CACHE, url).sendToTarget();//url тут - message
+        }
+    }
+
     @Override
     protected void onLooperPrepared() {//настройка looper'а, вызывается еще до obtainMessage
         mRequestHandler = new Handler() {//суть анонимного класса - переопределяется handleMessage
@@ -86,9 +100,29 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
                     T target = (T) msg.obj;//извлечение PhotoHolder из сообщения
                     Log.i(TAG, "Got a request for URL: " + mRequestMap.get(target));
                     handleRequest(target); //обработка сообщения
+                } else if (msg.what == MESSAGE_TO_CACHE) {
+                    handleRequest((List<String>) msg.obj);//обработка сообщения
                 }
             }
         };
+    }
+
+    private void handleRequest(List<String> url) {
+        Bitmap bitmap;
+        for (String urlUnit : url) {//каждый элемент массива url добавляется в кэш
+            if (lruCache.get(urlUnit) == null) {//если в кэше по ссылке нет фотографии
+                try {
+                    byte[] bitmapBytes = new FlickrFetchr().getUrlBytes(urlUnit);//тут получаем
+                    // набор битов, но подставляем ДРУГОЙ url - url фотографии
+                    bitmap = BitmapFactory//тут получаем саму фотку, из байтов полученных
+                            .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+                    Log.i(TAG, "Bitmap created");
+                    lruCache.put(urlUnit, bitmap);//тут помещается bitmap в кэш
+                } catch (IOException e) {
+                    Log.e(TAG, "Error downloading image", e);
+                }
+            }
+        }
     }
 
     private void handleRequest(final T target) {//метод обработки Handler'ом

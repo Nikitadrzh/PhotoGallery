@@ -146,9 +146,23 @@ public class PhotoGalleryFragment extends Fragment {
             if (position == (getItemCount() - 1)) {//проверка, что доскроллили до конца Rec.View
                 uploadNewPage();
             }
+
+            if (position % 10 == 0) {//метод срабатывает только каждую 10ую позицию
+                thumbnailDownloader.queueCacheThumbnail(createUrlArray(position));//создаем массив для
+                // url и передаем в метод queueCacheThumbnail
+            }
+
             thumbnailDownloader.queueThumbnail(holder, galleryItem.getUrl_s());//передаем в
             // thumbnailDownloader PhotoHolder, чтоб знать, куда фотку грузить, и url, откуда ее
             // скачивать
+        }
+
+        private List<String> createUrlArray(int position) {
+            List<String> urlArray = new ArrayList<>();//массив, в который добавляются url
+            for (int pos = position; pos < position + 10; pos++) {
+                urlArray.add(mGalleryItem.get(pos).getUrl_s());//добавляем в массив ОДИН url
+            }
+            return urlArray;
         }
 
         @Override
