@@ -32,7 +32,7 @@ public class ThumbnailDownloader<T> extends HandlerThread {//Фоновый по
     private ConcurrentMap<T, String> mRequestMap = new ConcurrentHashMap<>();//карта ключ:значение
     private Handler mResponseHandler;//а это уже Handler главного потока!
     private ThumbnailDownloadListener<T> mThumbnailDownloadListener;
-    private int cacheMaxSize = 5 * 1024 * 1024;//5 MiB
+    private int cacheMaxSize = 15 * 1024 * 1024;//15 MiB
     private LruCache<String, Bitmap> lruCache = new LruCache<>(cacheMaxSize);//кэш для фотографий
 
     public interface ThumbnailDownloadListener<T> {//создаем интерфейс слушателя для передачи

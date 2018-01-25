@@ -147,7 +147,7 @@ public class PhotoGalleryFragment extends Fragment {
                 uploadNewPage();
             }
 
-            if (position % 10 == 0) {//метод срабатывает только каждую 10ую позицию
+            if (position % 5 == 0) {//метод срабатывает только каждую 5ую позицию
                 thumbnailDownloader.queueCacheThumbnail(createUrlArray(position));//создаем массив для
                 // url и передаем в метод queueCacheThumbnail
             }
@@ -159,7 +159,7 @@ public class PhotoGalleryFragment extends Fragment {
 
         private List<String> createUrlArray(int position) {
             List<String> urlArray = new ArrayList<>();//массив, в который добавляются url
-            for (int pos = position; pos < position + 10; pos++) {
+            for (int pos = position; pos < position + 5; pos++) {
                 urlArray.add(mGalleryItem.get(pos).getUrl_s());//добавляем в массив ОДИН url
             }
             return urlArray;
