@@ -13,6 +13,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -48,6 +50,7 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);//Включаем удержание фрагмента(далее используется)ИЗ-ЗА ЭТОГО БАГ В
         // ПОВОРОТАХ
+        setHasOptionsMenu(true);//регистрация фрагмента для получения обратных вызовов меню
         new FetchItemsTask().execute();//запуск фонового потока
 
         Handler responseHandler = new Handler();//Handler главного потока
@@ -84,6 +87,13 @@ public class PhotoGalleryFragment extends Fragment {
                     }
                 });
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {//переопределяется метод
+        // создания меню, в котором заполняется созданный XML меню с поиском
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_photo_gallery, menu);
     }
 
     private class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {//фоновый поток
