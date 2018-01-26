@@ -130,18 +130,23 @@ public class PhotoGalleryFragment extends Fragment {
     }
 
     private void updateItems() {//метод, перезапускащий поток FlickrFetchr
-        new FetchItemsTask().execute();
+        String query = QueryPreferences.getStoredQuery(getActivity());//получает сохраненный запрос
+        new FetchItemsTask(query).execute();
     }
 
     private class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {//фоновый поток
+        private String mQuery;
+
+        public FetchItemsTask(String query) {//конструктор, принимающий запрос
+            mQuery = query;
+        }
 
         @Override
         protected List<GalleryItem> doInBackground(Void... params) {//что происходит на фоне
-            String query = "android"; //тестовый query
-            if (query == null) {
+            if (mQuery == null) {
                 return new FlickrFetchr().fetchRecentPhotos();
             } else {
-                return new FlickrFetchr().searchPhotos(query);
+                return new FlickrFetchr().searchPhotos(mQuery);
             }
         }
 
@@ -195,9 +200,9 @@ public class PhotoGalleryFragment extends Fragment {
 
             holder.bindDrawable(placeholder);//по-сути изменяется imageView от того элемента,
             // который сейчас в данном холдере, по его position
-            if (position == (getItemCount() - 1)) {//проверка, что доскроллили до конца Rec.View
-                uploadNewPage();
-            }
+//            if (position == (getItemCount() - 1)) {//проверка, что доскроллили до конца Rec.View
+//                uploadNewPage();
+//            }
 
             if (position % 10 == 0) {//метод срабатывает только каждую 10ую позицию
                 thumbnailDownloader.queueCacheThumbnail(createUrlArray(position));//создаем массив для
@@ -241,10 +246,10 @@ public class PhotoGalleryFragment extends Fragment {
                 (int) Math.floor(widthInDp / widthOfColumn)));
     }
 
-    private void uploadNewPage() {//метод загружает следующую страницу и присоединяет ее к Rec.View
-        setPage(getPage() + 1);//увеличение страницы
-        new FetchItemsTask().execute();//запуск фонового потока, загружающего новую стран.
-    }
+//    private void uploadNewPage() {//метод загружает следующую страницу и присоединяет ее к Rec.View
+//        setPage(getPage() + 1);//увеличение страницы
+//        new FetchItemsTask().execute();//запуск фонового потока, загружающего новую стран.
+//    }
 
     private void setupAdapter() {
         if (isAdded()) {//проверка, что фрагмент присоединен к активности
