@@ -11,10 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -94,6 +96,23 @@ public class PhotoGalleryFragment extends Fragment {
         // создания меню, в котором заполняется созданный XML меню с поиском
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_photo_gallery, menu);
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);//находим searchItem из menu
+        final SearchView searchView = (SearchView) searchItem.getActionView();//определяем
+        // searchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {//вызывается когда отправляется запрос
+                Log.d(TAG, "QueryTextSubmit: " + query);
+                updateItems();//метод который перезапускает поток FlickrFetchr
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {//вызывается при печати
+                Log.d(TAG, "QueryTextChange: " + newText);
+                return false;
+            }
+        });
     }
 
     private class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {//фоновый поток
