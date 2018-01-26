@@ -39,6 +39,7 @@ public class PhotoGalleryFragment extends Fragment {
     private static final String TAG = "PhotoGalleryFragment";
 
     private RecyclerView mRecyclerView;
+    private SearchView searchView;
     private List<GalleryItem> mItems = new ArrayList<>();
     private int page = 1;
     private ThumbnailDownloader<PhotoHolder> thumbnailDownloader;//<T> - тип объекта, который
@@ -99,17 +100,14 @@ public class PhotoGalleryFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_photo_gallery, menu);
         MenuItem searchItem = menu.findItem(R.id.menu_item_search);//находим searchItem из menu
-        final SearchView searchView = (SearchView) searchItem.getActionView();//определяем
+        searchView = (SearchView) searchItem.getActionView();//определяем
         // searchView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {//вызывается когда отправляется запрос
                 Log.d(TAG, "QueryTextSubmit: " + query);
-                InputMethodManager manager = (InputMethodManager) getActivity().
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (manager != null) {
-                    manager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-                }
+                hideKeyboard(searchView);//прячем клавиатуру
+                //searchView
                 QueryPreferences.setStoredQuery(getActivity(), query);//записывается запрос в
                 // хранилище общих настроек
                 mItems.clear();
@@ -137,6 +135,7 @@ public class PhotoGalleryFragment extends Fragment {
         // item menu
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
+                hideKeyboard();//прячем клавиатуру
                 QueryPreferences.setStoredQuery(getActivity(), null);//очищаем хранилище
                 updateItems();//обновляем картинки
                 mItems.clear();
@@ -251,6 +250,14 @@ public class PhotoGalleryFragment extends Fragment {
             mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
         } else {
             mRecyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
+        }
+    }
+
+    private void hideKeyboard(View searchView) {//метод прячет клавиатуру
+        InputMethodManager manager = (InputMethodManager) getActivity().
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (manager != null) {
+            manager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
         }
     }
 
