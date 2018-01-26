@@ -105,6 +105,7 @@ public class PhotoGalleryFragment extends Fragment {
                 Log.d(TAG, "QueryTextSubmit: " + query);
                 QueryPreferences.setStoredQuery(getActivity(), query);//записывается запрос в
                 // хранилище общих настроек
+                mItems.clear();
                 updateItems();//метод который перезапускает поток FlickrFetchr
                 return true;
             }
@@ -124,6 +125,7 @@ public class PhotoGalleryFragment extends Fragment {
             case R.id.menu_item_clear:
                 QueryPreferences.setStoredQuery(getActivity(), null);//очищаем хранилище
                 updateItems();//обновляем картинки
+                mItems.clear();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -146,6 +148,7 @@ public class PhotoGalleryFragment extends Fragment {
             if (mQuery == null) {
                 return new FlickrFetchr().fetchRecentPhotos();
             } else {
+
                 return new FlickrFetchr().searchPhotos(mQuery);
             }
         }
