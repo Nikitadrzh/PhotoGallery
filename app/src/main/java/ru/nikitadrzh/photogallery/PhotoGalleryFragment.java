@@ -105,11 +105,7 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {//вызывается когда отправляется запрос
                 Log.d(TAG, "QueryTextSubmit: " + query);
-                InputMethodManager manager = (InputMethodManager) getActivity().
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (manager != null) {
-                    manager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
-                }
+                hideKeyboard();//прячем клавиатуру
                 QueryPreferences.setStoredQuery(getActivity(), query);//записывается запрос в
                 // хранилище общих настроек
                 mItems.clear();
@@ -137,6 +133,7 @@ public class PhotoGalleryFragment extends Fragment {
         // item menu
         switch (item.getItemId()) {
             case R.id.menu_item_clear:
+                hideKeyboard();//прячем клавиатуру
                 QueryPreferences.setStoredQuery(getActivity(), null);//очищаем хранилище
                 updateItems();//обновляем картинки
                 mItems.clear();
@@ -251,6 +248,14 @@ public class PhotoGalleryFragment extends Fragment {
             mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
         } else {
             mRecyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
+        }
+    }
+
+    private void hideKeyboard() {//метод прячет клавиатуру
+        InputMethodManager manager = (InputMethodManager) getActivity().
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (manager != null) {
+            manager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         }
     }
 
