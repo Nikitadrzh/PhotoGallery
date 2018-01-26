@@ -62,7 +62,7 @@ public class FlickrFetchr {//Сетевой класс
         return new String(getUrlBytes(urlSpec));//да, в аргумент стринга передается массив байтов:)
     }
 
-    public List<GalleryItem> fetchItems(String page) {//построение URL запроса и получение
+    public List<GalleryItem> downloadGalleryItems(String url) {//построение URL запроса и получение
         // результата
         List<GalleryItem> items = new ArrayList<>();
 
