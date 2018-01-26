@@ -106,6 +106,7 @@ public class PhotoGalleryFragment extends Fragment {
             public boolean onQueryTextSubmit(String query) {//вызывается когда отправляется запрос
                 Log.d(TAG, "QueryTextSubmit: " + query);
                 hideKeyboard();//прячем клавиатуру
+                hideSearchView(searchView);//сворачиваем searchView
                 QueryPreferences.setStoredQuery(getActivity(), query);//записывается запрос в
                 // хранилище общих настроек
                 mItems.clear();
@@ -257,6 +258,11 @@ public class PhotoGalleryFragment extends Fragment {
         if (manager != null) {
             manager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         }
+    }
+
+    private void hideSearchView(SearchView searchView) {
+        searchView.setQuery("", false);
+        searchView.setIconified(true);
     }
 
     private void setupLayoutManager() {
