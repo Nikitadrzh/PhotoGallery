@@ -53,7 +53,7 @@ public class PhotoGalleryFragment extends Fragment {
         setRetainInstance(true);//Включаем удержание фрагмента(далее используется)ИЗ-ЗА ЭТОГО БАГ В
         // ПОВОРОТАХ
         setHasOptionsMenu(true);//регистрация фрагмента для получения обратных вызовов меню
-        new FetchItemsTask().execute();//запуск фонового потока
+        updateItems();//запуск фонового потока
 
         Handler responseHandler = new Handler();//Handler главного потока
         thumbnailDownloader = new ThumbnailDownloader<>(responseHandler);//создание потока
@@ -113,6 +113,10 @@ public class PhotoGalleryFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private void updateItems() {//метод, перезапускащий поток FlickrFetchr
+        new FetchItemsTask().execute();
     }
 
     private class FetchItemsTask extends AsyncTask<Void, Void, List<GalleryItem>> {//фоновый поток
