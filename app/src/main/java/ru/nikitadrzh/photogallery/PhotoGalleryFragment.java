@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class PhotoGalleryFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private List<GalleryItem> mItems = new ArrayList<>();
+    private ProgressBar progressBar;
     private int page = 1;
     private ThumbnailDownloader<PhotoHolder> thumbnailDownloader;//<T> - тип объекта, который
     // используется в качестве id для загрузки, его легко использовать для определения, куда
@@ -90,6 +92,8 @@ public class PhotoGalleryFragment extends Fragment {
                         setupLayoutManager();//настройка менеджера (под экран)
                     }
                 });
+        progressBar = v.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
         return v;
     }
 
@@ -111,6 +115,7 @@ public class PhotoGalleryFragment extends Fragment {
                 // хранилище общих настроек
                 mItems.clear();
                 mRecyclerView.removeAllViews();//очищается RecyclerView
+                progressBar.setVisibility(View.VISIBLE);//запускаем progressBar
                 updateItems();//метод который перезапускает поток FlickrFetchr
                 return true;
             }
@@ -170,6 +175,7 @@ public class PhotoGalleryFragment extends Fragment {
         protected void onPostExecute(List<GalleryItem> galleryItems) {//вызывается метод, который
             // уже выполняется в главном потоке, и работает после выполнения doInBackground
             mItems.addAll(galleryItems);
+            progressBar.setVisibility(View.INVISIBLE);//выключаем progressBar
             if (mItems.size() == galleryItems.size()) {//адаптер только 1 раз устанавливается
                 setupAdapter();
             } else {//а потом тупо обновляется, так как обновляется List
