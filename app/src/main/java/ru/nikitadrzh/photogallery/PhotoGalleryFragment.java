@@ -110,6 +110,7 @@ public class PhotoGalleryFragment extends Fragment {
                 QueryPreferences.setStoredQuery(getActivity(), query);//записывается запрос в
                 // хранилище общих настроек
                 mItems.clear();
+                mRecyclerView.removeAllViews();//очищается RecyclerView
                 updateItems();//метод который перезапускает поток FlickrFetchr
                 return true;
             }
