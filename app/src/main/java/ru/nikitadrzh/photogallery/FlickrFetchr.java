@@ -70,7 +70,7 @@ public class FlickrFetchr {//Сетевой класс
             String jsonString = getUrlString(url);//это итоговая строка в формате JSON
             Log.i(TAG, "Receives JSON: " + jsonString);
 
-            Gson gson = new Gson();
+            Gson gson = new Gson();//вынести это в новый метод потом
             Photos galleryItem = gson.fromJson(jsonString, Photos.class);//так просто null
             items = galleryItem.getPhotos().getPhoto();
 
@@ -82,6 +82,15 @@ public class FlickrFetchr {//Сетевой класс
 //            Log.e(TAG, "Failed to parse JSON", je);
 //        }
         return items;
+    }
+
+    private String buildUrl(String method, String query) {//метод построения URL
+        Uri.Builder uriBuilder = ENDPOINT.buildUpon()
+                .appendQueryParameter("method", method);//добавляем в uri строку с методом
+        if (method.equals(SEARCH_METHOD)) {//для такого метода добавляется еще параметр в запрос
+            uriBuilder.appendQueryParameter("text", query);//query это текст вводимый в поиске
+        }
+        return uriBuilder.build().toString();//возвращаем строку URL
     }
 
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)
