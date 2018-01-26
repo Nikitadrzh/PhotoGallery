@@ -93,6 +93,14 @@ public class FlickrFetchr {//Сетевой класс
         return uriBuilder.build().toString();//возвращаем строку URL
     }
 
+    public List<GalleryItem> fetchRecentPhotos() {//метод получения Recent фото, выз. из фрагмента
+        return downloadGalleryItems(buildUrl(FETCH_RECENT_METHOD, null));//возвр. список
+    }
+
+    public List<GalleryItem> searchPhotos(String query) {//метод Search
+        return downloadGalleryItems(buildUrl(SEARCH_METHOD, query));//возвр. список
+    }
+
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)
             throws IOException, JSONException {//создаются экземпляры модели из JSONObject
 
