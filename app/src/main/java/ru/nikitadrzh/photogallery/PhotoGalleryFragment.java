@@ -103,6 +103,8 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {//вызывается когда отправляется запрос
                 Log.d(TAG, "QueryTextSubmit: " + query);
+                QueryPreferences.setStoredQuery(getActivity(), query);//записывается запрос в
+                // хранилище общих настроек
                 updateItems();//метод который перезапускает поток FlickrFetchr
                 return true;
             }
@@ -113,6 +115,18 @@ public class PhotoGalleryFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {//метод, срабатывает, когда нажимаем на
+        // item menu
+        switch (item.getItemId()) {
+            case R.id.menu_item_clear:
+                QueryPreferences.setStoredQuery(getActivity(), null);//очищаем хранилище
+                updateItems();//обновляем картинки
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void updateItems() {//метод, перезапускащий поток FlickrFetchr
