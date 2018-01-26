@@ -90,8 +90,12 @@ public class PhotoGalleryFragment extends Fragment {
 
         @Override
         protected List<GalleryItem> doInBackground(Void... params) {//что происходит на фоне
-            return new FlickrFetchr().fetchItems(String.valueOf(page)); //в fetchItems передается
-            // страница
+            String query = "android"; //тестовый query
+            if (query == null) {
+                return new FlickrFetchr().fetchRecentPhotos();
+            } else {
+                return new FlickrFetchr().searchPhotos(query);
+            }
         }
 
         @Override
@@ -101,7 +105,8 @@ public class PhotoGalleryFragment extends Fragment {
             if (mItems.size() == galleryItems.size()) {//адаптер только 1 раз устанавливается
                 setupAdapter();
             } else {//а потом тупо обновляется, так как обновляется List
-                mRecyclerView.getAdapter()
+                mRecyclerView.getAdapter()//тут нужно менять реализацию, так как сейчас
+                        // присоединяется к Recycler View постоянно 1ая страница
                         .notifyItemChanged(mItems.size() - galleryItems.size());
             }
         }

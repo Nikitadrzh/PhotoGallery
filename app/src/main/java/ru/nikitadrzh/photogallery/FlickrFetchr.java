@@ -35,7 +35,6 @@ public class FlickrFetchr {//Сетевой класс
             .appendQueryParameter("format", "json")
             .appendQueryParameter("nojsoncallback", "1")
             .appendQueryParameter("extras", "url_s")
-            .appendQueryParameter("page", page)
             .build();
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {//данные по URL в виде байтов
