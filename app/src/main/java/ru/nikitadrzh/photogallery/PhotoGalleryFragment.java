@@ -1,5 +1,6 @@
 package ru.nikitadrzh.photogallery;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -103,6 +105,11 @@ public class PhotoGalleryFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {//вызывается когда отправляется запрос
                 Log.d(TAG, "QueryTextSubmit: " + query);
+                InputMethodManager manager = (InputMethodManager) getActivity().
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (manager != null) {
+                    manager.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+                }
                 QueryPreferences.setStoredQuery(getActivity(), query);//записывается запрос в
                 // хранилище общих настроек
                 mItems.clear();
