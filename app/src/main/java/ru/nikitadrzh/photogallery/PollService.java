@@ -41,11 +41,21 @@ public class PollService extends IntentService {//служба опроса
                 .getSystemService(Context.ALARM_SERVICE);//системная служба, отправляющая интенты
         if (isOn) {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),
-                    POLL_INTERVAL_MS, pendingIntent);//установка повтора запуска службы
+                    POLL_INTERVAL_MS, pendingIntent);//установка повтора запуска службы,
+            // ELAPSED_REALTIME - врямя используется после включения/пробуждения без вывода из сна
         } else {
             alarmManager.cancel(pendingIntent);//отменяем пожелание запуска службы
             pendingIntent.cancel();//дополнительная отмена, полезно делать
         }
+    }
+
+    public static boolean isServiceAlarmOn(Context context) {//метод для проверки существует ли
+        // PendingIntent
+        Intent intent = PollService.newIntent(context);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent,
+                PendingIntent.FLAG_NO_CREATE);//с этим флагом, если объект PendingIntent не
+        // существует, то возвращается null
+        return pendingIntent != null;//если pendingIntent null, то возвращается false
     }
 
     @Override
