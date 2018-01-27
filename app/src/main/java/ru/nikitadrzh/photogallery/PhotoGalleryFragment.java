@@ -59,9 +59,6 @@ public class PhotoGalleryFragment extends Fragment {
         // ПОВОРОТАХ
         setHasOptionsMenu(true);//регистрация фрагмента для получения обратных вызовов меню
         updateItems();//запуск фонового потока
-
-        PollService.setServiceAlarm(getActivity(), true);//тестовый вызов AlarmManager
-
         Handler responseHandler = new Handler();//Handler главного потока
         thumbnailDownloader = new ThumbnailDownloader<>(responseHandler);//создание потока
         // (цикла сообщений), ему передается Handler главного потока
@@ -136,6 +133,13 @@ public class PhotoGalleryFragment extends Fragment {
                 searchView.setQuery(query, false);
             }
         });
+
+        MenuItem alarmOnItem = menu.findItem(R.id.menu_item_toggle_polling);
+        if (PollService.isServiceAlarmOn(getActivity())) {
+            alarmOnItem.setTitle(R.string.stop_polling);
+        } else {
+            alarmOnItem.setTitle(R.string.start_polling);
+        }
     }
 
     @Override
@@ -148,8 +152,16 @@ public class PhotoGalleryFragment extends Fragment {
                 updateItems();//обновляем картинки
                 mItems.clear();
                 return true;
+            case R.id.menu_item_toggle_polling:
+                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
+                PollService.setServiceAlarm(getActivity(), shouldStartAlarm);//запускает или
+                // выключает AlarmManager
+                getActivity().invalidateOptionsMenu();//обновляем список menu
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     private void updateItems() {//метод, перезапускащий поток FlickrFetchr
