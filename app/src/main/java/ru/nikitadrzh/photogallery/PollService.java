@@ -29,7 +29,10 @@ public class PollService extends IntentService {//служба опроса
         if (!isNetworkAvailableAndConnected()) {//выход из метода при отсутствии сети
             return;
         }
-        Log.i(TAG, "Received an intent: " + intent);
+        String query = QueryPreferences.getStoredQuery(this);//query ТОЛЬКО для этого
+        // контекста
+        String lastResultId = QueryPreferences.getLastResultId(this);//id ТОЛЬКО для этого
+        // контекста
     }
 
     private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети
