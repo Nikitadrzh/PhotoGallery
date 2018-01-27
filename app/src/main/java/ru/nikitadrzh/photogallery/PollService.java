@@ -8,6 +8,8 @@ import android.net.ConnectivityManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import java.util.List;
+
 /**
  * Created by Nekit on 27.01.2018.
  */
@@ -33,6 +35,15 @@ public class PollService extends IntentService {//служба опроса
         // контекста
         String lastResultId = QueryPreferences.getLastResultId(this);//id ТОЛЬКО для этого
         // контекста
+        List<GalleryItem> items;//список, распарсенный из полученного JSON
+
+        if (query == null) {
+            items = new FlickrFetchr().fetchRecentPhotos(); //получаем последние фото
+        } else {
+            items = new FlickrFetchr().searchPhotos(query);//находим фото по query
+        }
+
+
     }
 
     private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети
