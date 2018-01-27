@@ -47,6 +47,14 @@ public class PollService extends IntentService {//служба опроса
             return;
         }
         String resultId = items.get(0).getId();//получаем первый результат
+
+        if (resultId.equals(lastResultId)) {
+            Log.i(TAG, "Got an old result: " + resultId);
+        } else {
+            Log.i(TAG, "Got a new result: " + resultId);
+        }
+
+        QueryPreferences.setLastResultId(this, resultId);//сохраняем в общих настрйоках
     }
 
     private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети
