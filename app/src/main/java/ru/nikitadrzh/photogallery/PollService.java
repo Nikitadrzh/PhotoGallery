@@ -43,7 +43,10 @@ public class PollService extends IntentService {//служба опроса
             items = new FlickrFetchr().searchPhotos(query);//находим фото по query
         }
 
-
+        if (items.size() == 0) {//если список нулевой, то return
+            return;
+        }
+        String resultId = items.get(0).getId();//получаем первый результат
     }
 
     private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети
