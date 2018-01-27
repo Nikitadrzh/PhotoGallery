@@ -9,7 +9,8 @@ import android.preference.PreferenceManager;
 
 public class QueryPreferences {//класс для работы с хранимым запросом (сохраняется даже при
     // перезагрузке)
-    private static final String PREF_SEARCH_QUERY = "searchQuery";//ключ для getString
+    private static final String PREF_SEARCH_QUERY = "searchQuery";//ключ для StoredQuery
+    private static final String PREF_LAST_RESULT = "lastResultId";//ключ для LastResultId
 
     public static String getStoredQuery(Context context) {//возвращает сохраненный запрос
         return PreferenceManager.getDefaultSharedPreferences(context)//механизм общих настроек
@@ -20,6 +21,19 @@ public class QueryPreferences {//класс для работы с храним�
         PreferenceManager.getDefaultSharedPreferences(context)
                 .edit()//возвращает объект Editor
                 .putString(PREF_SEARCH_QUERY, query)//записывается строка с ключом
+                .apply();
+    }
+
+    public static String getLastResultId(Context context) {//выдает id последней загруженной фото
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(PREF_LAST_RESULT, null);
+    }
+
+    public static void setLastResultId(Context context, String lastResultId) {//устанавливает id
+        // последней загруженной фото
+        PreferenceManager.getDefaultSharedPreferences(context)//возвращаются общие настройки
+                .edit()//возвращает объект Editor
+                .putString(PREF_LAST_RESULT, lastResultId)//записывается строка с ключом
                 .apply();
     }
 }
