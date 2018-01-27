@@ -60,8 +60,7 @@ public class PhotoGalleryFragment extends Fragment {
         setHasOptionsMenu(true);//регистрация фрагмента для получения обратных вызовов меню
         updateItems();//запуск фонового потока
 
-        Intent serviceIntent = PollService.newIntent(getActivity());//тестовый интент для службы
-        getActivity().startService(serviceIntent);//запускается служба
+        PollService.setServiceAlarm(getActivity(), true);//тестовый вызов AlarmManager
 
         Handler responseHandler = new Handler();//Handler главного потока
         thumbnailDownloader = new ThumbnailDownloader<>(responseHandler);//создание потока
