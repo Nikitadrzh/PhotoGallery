@@ -4,6 +4,7 @@ package ru.nikitadrzh.photogallery;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -25,7 +26,19 @@ public class PollService extends IntentService {//служба опроса
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {//вызывается, когда подходит очередь
+        if (!isNetworkAvailableAndConnected()) {//выход из метода при отсутствии сети
+            return;
+        }
         Log.i(TAG, "Received an intent: " + intent);
+    }
+
+    private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        boolean isNetworkAvailable = connectivityManager.getActiveNetworkInfo() != null;
+        boolean isNetworkConnected = isNetworkAvailable &&
+                connectivityManager.getActiveNetworkInfo().isConnected();
+        return isNetworkConnected;
     }
 
 }

@@ -1,6 +1,7 @@
 package ru.nikitadrzh.photogallery;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -58,6 +59,9 @@ public class PhotoGalleryFragment extends Fragment {
         // ПОВОРОТАХ
         setHasOptionsMenu(true);//регистрация фрагмента для получения обратных вызовов меню
         updateItems();//запуск фонового потока
+
+        Intent serviceIntent = PollService.newIntent(getActivity());//тестовый интент для службы
+        getActivity().startService(serviceIntent);//запускается служба
 
         Handler responseHandler = new Handler();//Handler главного потока
         thumbnailDownloader = new ThumbnailDownloader<>(responseHandler);//создание потока
