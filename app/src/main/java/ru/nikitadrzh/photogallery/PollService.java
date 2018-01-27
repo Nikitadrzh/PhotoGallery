@@ -1,14 +1,18 @@
 package ru.nikitadrzh.photogallery;
 
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nekit on 27.01.2018.
@@ -16,6 +20,7 @@ import java.util.List;
 
 public class PollService extends IntentService {//служба опроса
     private static final String TAG = "PollService";//константа для debugger
+    private static final long POLL_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);//60 сек
 
     public PollService() {
         super(TAG);
@@ -24,6 +29,23 @@ public class PollService extends IntentService {//служба опроса
     public static Intent newIntent(Context context) {//intent для создания службы, ставит команду в
         // очередь
         return new Intent(context, PollService.class);
+    }
+
+    public static void setServiceAlarm(Context context, boolean isOn) {//настройка AlarmManager
+        Intent intent = PollService.newIntent(context);//context, тк метод статический и может
+        // вызываться из разного контекста
+        PendingIntent pendingIntent = PendingIntent
+                .getService(context, 0, intent, 0);//тут упаковывается "пожеление"
+        // запуска службы
+        AlarmManager alarmManager = (AlarmManager) context
+                .getSystemService(Context.ALARM_SERVICE);//системная служба, отправляющая интенты
+        if (isOn) {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(),
+                    POLL_INTERVAL_MS, pendingIntent);//установка повтора запуска службы
+        } else {
+            alarmManager.cancel(pendingIntent);//отменяем пожелание запуска службы
+            pendingIntent.cancel();//дополнительная отмена, полезно делать
+        }
     }
 
     @Override
