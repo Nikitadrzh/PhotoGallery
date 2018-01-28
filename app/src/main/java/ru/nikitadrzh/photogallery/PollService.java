@@ -86,7 +86,7 @@ public class PollService extends IntentService {//служба опроса
             Log.i(TAG, "Got a new result: " + resultId);
         }
 
-        QueryPreferences.setLastResultId(this, resultId);//сохраняем в общих настрйоках
+        QueryPreferences.setLastResultId(this, resultId);//сохраняем в общих настройках
     }
 
     private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети
