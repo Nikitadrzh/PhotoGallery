@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PollService extends IntentService {//служба опроса
     private static final String TAG = "PollService";//константа для debugger
-    private static final long POLL_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);//60 сек
+    private static final long POLL_INTERVAL_MS = TimeUnit.MINUTES.toMillis(15);//интервал
     private static final String NOTIFICATION_CHANNEL_0 = "new_pictures_channel";
 
     public PollService() {
