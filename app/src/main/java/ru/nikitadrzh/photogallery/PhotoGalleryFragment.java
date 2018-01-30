@@ -1,5 +1,8 @@
 package ru.nikitadrzh.photogallery;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,6 +48,8 @@ public class PhotoGalleryFragment extends Fragment {
     private ProgressBar progressBar;
     private int page = 1;
     private ThumbnailDownloader<PhotoHolder> thumbnailDownloader;//<T> - тип объекта, который
+
+    private final int JOB_ID = 1;
     // используется в качестве id для загрузки, его легко использовать для определения, куда
     // загружать картинку
 
@@ -75,6 +80,22 @@ public class PhotoGalleryFragment extends Fragment {
         thumbnailDownloader.start();//запуск фонового потока
         thumbnailDownloader.getLooper();//Looper управляет очередью сообщений потока
         Log.i(TAG, "Background thread started");
+
+        JobScheduler scheduler;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            scheduler = (JobScheduler) getContext()
+                    .getSystemService(Context.JOB_SCHEDULER_SERVICE);
+            JobInfo jobInfo = new JobInfo.Builder(
+                    JOB_ID, new ComponentName(getContext(), JobPollService.class))
+                    .setPeriodic(1000 * 60 * 15)
+                    .setPersisted(true)
+                    .build();
+            if (scheduler != null) {
+                scheduler.schedule(jobInfo);
+            } else {
+                Log.i(TAG, "scheduler = null");
+            }
+        }
     }
 
     @Nullable
