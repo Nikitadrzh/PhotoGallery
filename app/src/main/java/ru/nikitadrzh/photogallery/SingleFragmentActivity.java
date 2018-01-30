@@ -1,5 +1,6 @@
 package ru.nikitadrzh.photogallery;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.LayoutRes;
@@ -31,8 +32,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { //аб�
         setContentView(getLayoutResId());
 
         StrictMode.enableDefaults();
-        JobManager.create(this).addJobCreator(new DemoJobCreator());
-        DemoSyncJob.scheduleJob();
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_сontainer);

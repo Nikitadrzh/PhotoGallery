@@ -11,6 +11,8 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 import com.evernote.android.job.JobRequest;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by Nekit on 29.01.2018.
  */
@@ -21,27 +23,29 @@ public class DemoSyncJob extends Job {
     @NonNull
     @Override
     protected Result onRunJob(@NonNull Params params) {
-        Notification notification = new NotificationCompat
-                .Builder(getContext(), "new_photo_channel_notification")
-                .setTicker(getContext().getResources().getString(R.string.new_pictures_title))//бегущая
-                // строка
-                .setSmallIcon(android.R.drawable.ic_menu_report_image)//системная иконка
-                .setContentTitle("Evernote")
-                .setContentText(getContext().getResources().getString(R.string.new_pictures_text))
-                .setContentIntent(PendingIntent.getActivity(getContext(), 0,
-                        PhotoGalleryActivity.newIntent(getContext()), 0))
-                .setAutoCancel(true)
-                .build();
-        NotificationManagerCompat.from(getContext()).notify(0, notification);//создается
-        // notificationManager и отправляется notification
+//        Notification notification = new NotificationCompat
+//                .Builder(getContext(), "new_photo_channel_notification")
+//                .setTicker(getContext().getResources().getString(R.string.new_pictures_title))//бегущая
+//                // строка
+//                .setSmallIcon(android.R.drawable.ic_menu_report_image)//системная иконка
+//                .setContentTitle("Evernote")
+//                .setContentText(getContext().getResources().getString(R.string.new_pictures_text))
+//                .setContentIntent(PendingIntent.getActivity(getContext(), 0,
+//                        PhotoGalleryActivity.newIntent(getContext()), 0))
+//                .setAutoCancel(true)
+//                .build();
+//        NotificationManagerCompat.from(getContext()).notify(0, notification);//создается
+//        // notificationManager и отправляется notification
 
         return Result.SUCCESS;
     }
 
     public static void scheduleJob() {
-        new JobRequest.Builder(DemoSyncJob.TAG)
-                .setExecutionWindow(30_000L, 40_000L)
-                .build()
-                .schedule();
+//        new JobRequest.Builder(DemoSyncJob.TAG)
+////                .setPeriodic(TimeUnit.MINUTES.toMillis(15),
+////                        TimeUnit.MINUTES.toMillis(5))
+//                .setExecutionWindow(30_000L, 40_000L)
+//                .build()
+//                .schedule();
     }
 }
