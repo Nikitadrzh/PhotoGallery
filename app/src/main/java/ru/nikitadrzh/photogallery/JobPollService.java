@@ -1,5 +1,6 @@
 package ru.nikitadrzh.photogallery;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,6 +18,11 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.util.List;
+
+import static ru.nikitadrzh.photogallery.PollService.ACTION_SHOW_NOTIFICATION;
+import static ru.nikitadrzh.photogallery.PollService.NOTIFICATION;
+import static ru.nikitadrzh.photogallery.PollService.PERM_PRIVATE;
+import static ru.nikitadrzh.photogallery.PollService.REQUEST_CODE;
 
 /**
  * Created by Nekit on 30.01.2018.
@@ -103,12 +109,13 @@ public class JobPollService extends JobService {
 //                        // работают, поэтому оповещение двойное
 //                        .notify(0, notification);//создается
                 // notificationManager и отправляется notification
-                if (notificationManager != null) {
-                    notificationManager.notify(0, notification);
-                }
-
-                sendBroadcast(new Intent(PollService.ACTION_SHOW_NOTIFICATION),
-                        PollService.PERM_PRIVATE);
+//                if (notificationManager != null) {
+//                    notificationManager.notify(0, notification);
+//                }
+//
+//                sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION),
+//                        PERM_PRIVATE);
+                showBackgroundNotification(0, notification);
             } else {
                 Log.i(TAG, "Got a new result: " + resultId);
 
@@ -140,15 +147,24 @@ public class JobPollService extends JobService {
 //                        // работают, поэтому оповещение двойное
 //                        .notify(0, notification);//создается
                 // notificationManager и отправляется notification
-                if (notificationManager != null) {
-                    notificationManager.notify(0, notification);
-                }
+//                if (notificationManager != null) {
+//                    notificationManager.notify(0, notification);
+//                }
+                showBackgroundNotification(0, notification);
             }
             QueryPreferences.setLastResultId(jobContext, resultId);//сохраняем в общих настройках
 
-            sendBroadcast(new Intent(PollService.ACTION_SHOW_NOTIFICATION),
-                    PollService.PERM_PRIVATE);
+//            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION),
+//                    PERM_PRIVATE);
         }
+    }
+
+    private void showBackgroundNotification(int requestCode, Notification notification) {
+        Intent intent = new Intent(ACTION_SHOW_NOTIFICATION);
+        intent.putExtra(REQUEST_CODE, requestCode);
+        intent.putExtra(NOTIFICATION, notification);
+        sendOrderedBroadcast(intent, PERM_PRIVATE, null, null,
+                Activity.RESULT_OK, null, null);
     }
 
     private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети

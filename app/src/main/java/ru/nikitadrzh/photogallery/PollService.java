@@ -1,6 +1,7 @@
 package ru.nikitadrzh.photogallery;
 
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
@@ -30,6 +31,8 @@ public class PollService extends IntentService {//служба опроса
     public static final String ACTION_SHOW_NOTIFICATION =
             "ru.nikitadrzh.photogallery.SHOW_NOTIFICATION";//константа для action
     public static final String PERM_PRIVATE = "ru.nikitadrzh.photogallery.PRIVATE";
+    public static final String REQUEST_CODE = "REQUEST_CODE";
+    public static final String NOTIFICATION = "NOTIFICATION";
 
     public PollService() {
         super(TAG);
@@ -122,12 +125,18 @@ public class PollService extends IntentService {//служба опроса
                             PhotoGalleryActivity.newIntent(this), 0))
                     .setAutoCancel(true)
                     .build();
-            NotificationManagerCompat.from(this).notify(0, notification);//создается
-            //notificationManager и отправляется notification
-            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION), PERM_PRIVATE);
+            showBackgroundNotification(0, notification);
         }
 
         QueryPreferences.setLastResultId(this, resultId);//сохраняем в общих настройках
+    }
+
+    private void showBackgroundNotification(int requestCode, Notification notification) {
+        Intent intent = new Intent(ACTION_SHOW_NOTIFICATION);
+        intent.putExtra(REQUEST_CODE, requestCode);
+        intent.putExtra(NOTIFICATION, notification);
+        sendOrderedBroadcast(intent, PERM_PRIVATE, null, null,
+                Activity.RESULT_OK, null, null);
     }
 
     private boolean isNetworkAvailableAndConnected() {//проверяется доступность сети
