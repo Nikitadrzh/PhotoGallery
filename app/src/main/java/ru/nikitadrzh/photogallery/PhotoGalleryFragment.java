@@ -222,18 +222,34 @@ public class PhotoGalleryFragment extends VisibleFragment {
         }
     }
 
-    private class PhotoHolder extends RecyclerView.ViewHolder {
+    private class PhotoHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
+
         private ImageView mImageView;
+        private GalleryItem mGalleryItem;//сслылка на объект из массива List<GalleryItem>
+
 
         public PhotoHolder(View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.item_image_view);
+            itemView.setOnClickListener(this);
             Log.i(TAG, "allRight");
         }
 
         public void bindDrawable(Drawable drawable) { //новому элементу в холдере задается
             // какое-либо значение
             mImageView.setImageDrawable(drawable);//устанавливается изображение
+        }
+
+        public void bindGalleryItem(GalleryItem galleryItem) {
+            mGalleryItem = galleryItem;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, mGalleryItem.getPhotoPageUri());//неявный
+            // интент для перехода по uri в браузере
+            startActivity(intent);
         }
     }
 
@@ -254,8 +270,8 @@ public class PhotoGalleryFragment extends VisibleFragment {
         @Override
         public void onBindViewHolder(PhotoHolder holder, int position) {
             GalleryItem galleryItem = mGalleryItem.get(position);
+            holder.bindGalleryItem(galleryItem);//привязываем элемент списка для клика по нему
             Drawable placeholder = getResources().getDrawable(R.drawable.bill_up_close);
-
             holder.bindDrawable(placeholder);//по-сути изменяется imageView от того элемента,
             // который сейчас в данном холдере, по его position
 //            if (position == (getItemCount() - 1)) {//проверка, что доскроллили до конца Rec.View
