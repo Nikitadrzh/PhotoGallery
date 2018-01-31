@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.evernote.android.job.JobManager;
-
 /**
  * Created by Nikita on 01.12.2017.
  */
