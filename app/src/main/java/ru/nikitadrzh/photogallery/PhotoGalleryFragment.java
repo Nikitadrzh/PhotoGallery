@@ -40,7 +40,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_SETTLING;
  * Created by Nekit on 17.01.2018.
  */
 
-public class PhotoGalleryFragment extends Fragment {
+public class PhotoGalleryFragment extends VisibleFragment {
     private static final String TAG = "PhotoGalleryFragment";
 
     private RecyclerView mRecyclerView;

@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -105,6 +106,9 @@ public class JobPollService extends JobService {
                 if (notificationManager != null) {
                     notificationManager.notify(0, notification);
                 }
+
+                sendBroadcast(new Intent(PollService.ACTION_SHOW_NOTIFICATION),
+                        PollService.PERM_PRIVATE);
             } else {
                 Log.i(TAG, "Got a new result: " + resultId);
 
@@ -141,6 +145,9 @@ public class JobPollService extends JobService {
                 }
             }
             QueryPreferences.setLastResultId(jobContext, resultId);//сохраняем в общих настройках
+
+            sendBroadcast(new Intent(PollService.ACTION_SHOW_NOTIFICATION),
+                    PollService.PERM_PRIVATE);
         }
     }
 

@@ -29,6 +29,7 @@ public class PollService extends IntentService {//служба опроса
     private static final String NOTIFICATION_CHANNEL_0 = "new_pictures_channel";
     public static final String ACTION_SHOW_NOTIFICATION =
             "ru.nikitadrzh.photogallery.SHOW_NOTIFICATION";//константа для action
+    public static final String PERM_PRIVATE = "ru.nikitadrzh.photogallery.PRIVATE";
 
     public PollService() {
         super(TAG);
@@ -109,25 +110,21 @@ public class PollService extends IntentService {//служба опроса
 //                    notificationManager.createNotificationChannel(notificationChannel);
 //                }
 //            }
-//
-//            Notification notification = new NotificationCompat
-//                    .Builder(this, "new_photo_channel_notification")
-//                    .setTicker(getResources().getString(R.string.new_pictures_title))//бегущая
-//                    // строка
-//                    .setSmallIcon(android.R.drawable.ic_menu_report_image)//системная иконка
-//                    .setContentTitle(getResources().getString(R.string.new_pictures_title))
-//                    .setContentText(getResources().getString(R.string.new_pictures_text))
-//                    .setContentIntent(PendingIntent.getActivity(this, 0,
-//                            PhotoGalleryActivity.newIntent(this), 0))
-//                    .setAutoCancel(true)
-//                    .build();
-////            NotificationManagerCompat.from(this).notify(0, notification);//создается
-//            // notificationManager и отправляется notification
-//            if (notificationManager != null) {
-//                notificationManager.notify(0, notification);
-//            }
-
-            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION));
+            //этот код для версий ниже OREO:
+            Notification notification = new NotificationCompat
+                    .Builder(this, "new_photo_channel_notification")
+                    .setTicker(getResources().getString(R.string.new_pictures_title))//бегущая
+                    // строка
+                    .setSmallIcon(android.R.drawable.ic_menu_report_image)//системная иконка
+                    .setContentTitle(getResources().getString(R.string.new_pictures_title))
+                    .setContentText(getResources().getString(R.string.new_pictures_text))
+                    .setContentIntent(PendingIntent.getActivity(this, 0,
+                            PhotoGalleryActivity.newIntent(this), 0))
+                    .setAutoCancel(true)
+                    .build();
+            NotificationManagerCompat.from(this).notify(0, notification);//создается
+            //notificationManager и отправляется notification
+            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION), PERM_PRIVATE);
         }
 
         QueryPreferences.setLastResultId(this, resultId);//сохраняем в общих настройках
