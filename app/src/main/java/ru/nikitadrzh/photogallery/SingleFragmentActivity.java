@@ -8,8 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.evernote.android.job.JobManager;
-
 /**
  * Created by Nikita on 01.12.2017.
  */
@@ -31,8 +29,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity { //аб�
         setContentView(getLayoutResId());
 
         StrictMode.enableDefaults();
-        JobManager.create(this).addJobCreator(new DemoJobCreator());
-        DemoSyncJob.scheduleJob();
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_сontainer);
