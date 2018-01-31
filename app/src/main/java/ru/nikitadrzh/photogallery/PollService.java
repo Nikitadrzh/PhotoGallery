@@ -16,8 +16,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
-import com.evernote.android.job.JobManager;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
