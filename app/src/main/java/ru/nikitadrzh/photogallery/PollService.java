@@ -27,6 +27,8 @@ public class PollService extends IntentService {//служба опроса
     private static final String TAG = "PollService";//константа для debugger
     private static final long POLL_INTERVAL_MS = TimeUnit.MINUTES.toMillis(1);//интервал
     private static final String NOTIFICATION_CHANNEL_0 = "new_pictures_channel";
+    public static final String ACTION_SHOW_NOTIFICATION =
+            "ru.nikitadrzh.photogallery.SHOW_NOTIFICATION";//константа для action
 
     public PollService() {
         super(TAG);
@@ -124,6 +126,8 @@ public class PollService extends IntentService {//служба опроса
 //            if (notificationManager != null) {
 //                notificationManager.notify(0, notification);
 //            }
+
+            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION));
         }
 
         QueryPreferences.setLastResultId(this, resultId);//сохраняем в общих настройках
