@@ -149,5 +149,4 @@ public class JobPollService extends JobService {
                 connectivityManager.getActiveNetworkInfo().isConnected();
         return isNetworkConnected;
     }
-
 }
