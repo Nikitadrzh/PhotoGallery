@@ -67,4 +67,13 @@ public class PhotoPageFragment extends VisibleFragment {
         mWebView.loadUrl(mUri.toString());
         return view;
     }
+
+    public boolean canWebViewGoBack() {//метод проверяет возможен ли переход назад
+        return mWebView.canGoBack();
+    }
+
+    public void webViewGoBack() {//метод с помощью которого переходим назад
+        mWebView.goBack();
+    }
+
 }
