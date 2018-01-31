@@ -53,6 +53,8 @@ public class PollService extends IntentService {//служба опроса
             alarmManager.cancel(pendingIntent);//отменяем пожелание запуска службы
             pendingIntent.cancel();//дополнительная отмена, полезно делать
         }
+
+        QueryPreferences.setAlarmOn(context, isOn);
     }
 
     public static boolean isServiceAlarmOn(Context context) {//метод для проверки существует ли

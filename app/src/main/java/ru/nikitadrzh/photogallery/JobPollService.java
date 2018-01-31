@@ -39,6 +39,9 @@ public class JobPollService extends JobService {
         // контекста
         lastResultId = QueryPreferences.getLastResultId(this);//id ТОЛЬКО для этого
         // контекста
+        QueryPreferences.setAlarmOn(jobContext, true);//включение сигнала для
+        // широковещательного приемника, по сути здесь возможно не нужно, тк и без этого должно
+        // работать
         new PollTask().execute(params);
         return true;
     }

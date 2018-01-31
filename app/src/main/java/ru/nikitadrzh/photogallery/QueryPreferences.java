@@ -11,6 +11,7 @@ public class QueryPreferences {//класс для работы с храним�
     // перезагрузке)
     private static final String PREF_SEARCH_QUERY = "searchQuery";//ключ для StoredQuery
     private static final String PREF_LAST_RESULT = "lastResultId";//ключ для LastResultId
+    private static final String PREF_IS_ALARM_ON = "isAlarmOn";//ключ ддя Alarm
 
     public static String getStoredQuery(Context context) {//возвращает сохраненный запрос
         return PreferenceManager.getDefaultSharedPreferences(context)//механизм общих настроек
@@ -34,6 +35,19 @@ public class QueryPreferences {//класс для работы с храним�
         PreferenceManager.getDefaultSharedPreferences(context)//возвращаются общие настройки
                 .edit()//возвращает объект Editor
                 .putString(PREF_LAST_RESULT, lastResultId)//записывается строка с ключом
+                .apply();
+    }
+
+    public static boolean isAlarmOn(Context context) {//проверка состояния сигнала
+        return PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean(PREF_IS_ALARM_ON, false);//false - defaultValue
+    }
+
+    public static void setAlarmOn(Context context, boolean isOn) {//устанавливается состояние
+        // сигнала
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_IS_ALARM_ON, isOn)
                 .apply();
     }
 }

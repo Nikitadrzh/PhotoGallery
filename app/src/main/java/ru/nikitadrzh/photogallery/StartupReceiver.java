@@ -16,5 +16,10 @@ public class StartupReceiver extends BroadcastReceiver {//широковещат
     public void onReceive(Context context, Intent intent) {
         Log.i(TAG, "Received broadcast intent: " + intent.getAction());//тут action -
         // BOOT_COMPLETED из манифеста
+
+        boolean isOn = QueryPreferences.isAlarmOn(context);
+        Log.i(TAG, "context is: " + context);
+        Log.i(TAG, "isOn: " + isOn);
+        PollService.setServiceAlarm(context, isOn);
     }
 }
