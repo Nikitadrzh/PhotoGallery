@@ -71,8 +71,9 @@ public class FlickrFetchr {//Сетевой класс
 
             Gson gson = new Gson();//вынести это в новый метод потом
             Photos galleryItem = gson.fromJson(jsonString, Photos.class);//так просто null
-            items = galleryItem.getPhotos().getPhoto();
+            items = galleryItem.getPhotos().getPhoto();//тут заполняется распарсенный массив
 
+            Log.i(TAG, "");
             //JSONObject jsonBody = new JSONObject(jsonString);//Строится JSONObject
             //parseItems(items, jsonBody);//мотод парсит JSONObject и создает List<GalleryItem>
         } catch (IOException ioe) {

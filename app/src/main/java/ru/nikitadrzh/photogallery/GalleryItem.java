@@ -1,16 +1,19 @@
 package ru.nikitadrzh.photogallery;
 
+import android.net.Uri;
+
 /**
  * Created by Nekit on 17.01.2018.
  */
 
 public class GalleryItem { //класс модели
-    //    private String mCaption;
+//    private String mCaption;
 //    private String mId;
 //    private String mUrl;
     private String id;
     private String url_s;
     private String title;
+    private String owner;
 
     @Override
     public String toString() {//override от object
@@ -41,6 +44,17 @@ public class GalleryItem { //класс модели
         this.title = title;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public Uri getPhotoPageUri() {//получем url страницы
+        return Uri.parse("https://www.flickr.com/photos/")
+                .buildUpon()
+                .appendPath(owner)
+                .appendPath(id)
+                .build();
+    }
 
 //    public String getmCaption() {
 //        return mCaption;
