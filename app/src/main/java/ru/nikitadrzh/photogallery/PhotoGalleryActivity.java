@@ -59,5 +59,4 @@ public class PhotoGalleryActivity extends SingleFragmentActivity {
     //остановились на реализации интерфейса//
 
 
-
 }

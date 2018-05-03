@@ -50,17 +50,19 @@ public class PhotoGalleryFragment extends Fragment {
         // ПОВОРОТАХ
         new FetchItemsTask().execute();//запуск фонового потока
 
-//        Handler responseHandler = new Handler();
-        thumbnailDownloader = new ThumbnailDownloader<>();//создание потока (цикла сообщений)
-//        thumbnailDownloader.setThumbnailDownloadListener(
-//                new ThumbnailDownloader.ThumbnailDownloadListener<PhotoHolder>() {
-//                    @Override
-//                    public void onThumbnailDownloaded(PhotoHolder photoHolder, Bitmap bitmap) {
-//                        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-//                        photoHolder.bindDrawable(drawable);
-//                    }
-//                }
-//        );
+        Handler responseHandler = new Handler();//Handler главного потока
+        thumbnailDownloader = new ThumbnailDownloader<>(responseHandler);//создание потока
+        // (цикла сообщений), ему передается Handler главного потока
+        thumbnailDownloader.setThumbnailDownloadListener(//для thumbnailDownloader устанавливается
+                // слушатель, устанавливающий картинку в photoHolder после ее загрузки
+                new ThumbnailDownloader.ThumbnailDownloadListener<PhotoHolder>() {
+                    @Override
+                    public void onThumbnailDownloaded(PhotoHolder photoHolder, Bitmap bitmap) {
+                        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                        photoHolder.bindDrawable(drawable);
+                    }
+                }
+        );
         thumbnailDownloader.start();//запуск фонового потока
         thumbnailDownloader.getLooper();//Looper управляет очередью сообщений потока
         Log.i(TAG, "Background thread started");
@@ -197,5 +199,11 @@ public class PhotoGalleryFragment extends Fragment {
         super.onDestroy();
         thumbnailDownloader.quit();//завершение потока
         Log.i(TAG, "Background thread destroyed");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        thumbnailDownloader.clearQueue();//очищаем сообщения из очереди сообщений
     }
 }
